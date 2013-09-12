@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'subscriber' do
   let(:subscriber) { User.create }
+  let(:subscribable) { Post.create }
 
   it 'should have subscriptions' do
     # TODO figure out why shoulda matchers are blowing up and do this right
@@ -13,28 +14,32 @@ describe 'subscriber' do
   end
 
   it 'should be able to subscribe' do
-    subscribable = Post.create
-
     subscriber.subscribe_to(subscribable)
 
-    subscriber.subscriptions.length.should eq 1
+    subscriber.subscriptions.count.should eq 1
   end
 
   it 'should not create duplicate subscriptions' do
-    subscribable = Post.create
-
     subscriber.subscribe_to subscribable
     subscriber.subscribe_to subscribable
 
-    subscriber.subscriptions.length.should eq 1
+    subscriber.subscriptions.count.should eq 1
   end
 
   it 'should return a Subscription' do
-    subscribable = Post.create
-
     subscription = subscriber.subscribe_to subscribable
 
     subscription.should be_an_instance_of Notifi::Subscription
+  end
+
+  it 'should be able to unsubscribe' do
+    subscriber.subscribe_to subscribable
+
+    subscriber.unsubscribe_from subscribable
+
+    subscriber.subscriptions.inspect
+
+    subscriber.subscriptions.count.should eq 0
   end
 
   it 'should call on_notification block when notification is created' do
@@ -53,17 +58,14 @@ describe 'subscriber' do
     end
 
     thing = Thing.create
-    post = Post.create
 
-    thing.subscribe_to post
+    thing.subscribe_to subscribable
     thing.subscriptions.first.notify
 
     thing.class.instance_variable_get(:@block_called).should be true
   end
 
   it 'should be able to mark all notifications as read' do
-    subscribable = Post.create
-
     subscription = subscriber.subscribe_to subscribable
 
     subscription.notify
