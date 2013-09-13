@@ -13,64 +13,76 @@ describe 'subscriber' do
     subscriber.should respond_to(:notifications)
   end
 
-  it 'should be able to subscribe' do
-    subscriber.subscribe_to(subscribable)
+  context 'subscribe_to' do
+    it 'should create a subscription' do
+      subscriber.subscribe_to(subscribable)
 
-    subscriber.subscriptions.count.should eq 1
-  end
-
-  it 'should not create duplicate subscriptions' do
-    subscriber.subscribe_to subscribable
-    subscriber.subscribe_to subscribable
-
-    subscriber.subscriptions.count.should eq 1
-  end
-
-  it 'should return a Subscription' do
-    subscription = subscriber.subscribe_to subscribable
-
-    subscription.should be_an_instance_of Notifi::Subscription
-  end
-
-  it 'should be able to unsubscribe' do
-    subscriber.subscribe_to subscribable
-
-    subscriber.unsubscribe_from subscribable
-
-    subscriber.subscriptions.inspect
-
-    subscriber.subscriptions.count.should eq 0
-  end
-
-  it 'should call on_notification block when notification is created' do
-    class Thing
-      include Mongoid::Document
-      include Notifi
-
-      acts_as_subscriber
-
-      attr_accessor :notified
-
-      @block_called = false
-      on_notification do |notification|
-        @block_called = true
-      end
+      subscriber.subscriptions.count.should eq 1
     end
 
-    thing = Thing.create
+    it 'should not create duplicate subscriptions' do
+      subscriber.subscribe_to subscribable
+      subscriber.subscribe_to subscribable
 
-    thing.subscribe_to subscribable
-    thing.subscriptions.first.notify
+      subscriber.subscriptions.count.should eq 1
+    end
 
-    thing.class.instance_variable_get(:@block_called).should be true
+    it 'should return a Subscription' do
+      subscription = subscriber.subscribe_to subscribable
+
+      subscription.should be_an_instance_of Notifi::Subscription
+    end
   end
 
-  it 'should be able to mark all notifications as read' do
-    subscription = subscriber.subscribe_to subscribable
 
-    subscription.notify
-    subscription.notify
 
-    subscriber.notifications.mark_as_read
+  context 'unsubscribe_from' do
+    it 'should be able to unsubscribe' do
+      subscriber.subscribe_to subscribable
+
+      subscriber.unsubscribe_from subscribable
+
+      subscriber.subscriptions.inspect
+
+      subscriber.subscriptions.count.should eq 0
+    end
+  end
+
+  context 'on_notification' do
+    it 'should be called when notification is created' do
+      class Thing
+        include Mongoid::Document
+        include Notifi
+
+        acts_as_subscriber
+
+        attr_accessor :notified
+
+        @block_called = false
+        on_notification do |notification|
+          @block_called = true
+        end
+      end
+
+      thing = Thing.create
+
+      thing.subscribe_to subscribable
+      thing.subscriptions.first.notify
+
+      thing.class.instance_variable_get(:@block_called).should be true
+    end
+  end
+
+  context 'mark_as_read' do
+    it 'should set read to true on all notifications' do
+      subscription = subscriber.subscribe_to subscribable
+
+      subscription.notify
+      subscription.notify
+
+      subscriber.notifications.mark_as_read
+
+      subscriber.notifications.each { |n| n.read?.should be true }
+    end
   end
 end
