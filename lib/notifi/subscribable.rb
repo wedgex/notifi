@@ -1,14 +1,15 @@
 module Notifi
   module Subscribable
-    module InstanceMethods
-      def notify(message='')
-        subscriptions.each do |s|
-          s.notify(message)
-        end
+    def self.included(base)
+      base.extend ClassMethods
+    end
+
+    def notify(message='')
+      subscriptions.each do |s|
+        s.notify(message)
       end
     end
 
-    module ClassMethods
-    end
+    module ClassMethods; end
   end
 end

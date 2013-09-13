@@ -13,8 +13,7 @@ module Notifi
 
       class_attribute :notification_event
 
-      include Subscriber::InstanceMethods
-      extend Subscriber::ClassMethods
+      include Subscriber
     end
 
     def acts_as_subscribable
@@ -24,8 +23,7 @@ module Notifi
       Notification.belongs_to :subscribable, polymorphic: true
       has_many :notifications, as: :subscribable, class_name: Notification.to_s, dependent: :destroy
 
-      include Subscribable::InstanceMethods
-      extend Subscribable::ClassMethods
+      include Subscribable
     end
   end
 end

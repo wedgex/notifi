@@ -20,6 +20,10 @@ describe 'subscriber' do
       subscriber.subscriptions.count.should eq 1
     end
 
+    it 'should throw exception if not given a subscribeble' do
+      -> { subscriber.unsubscribe_from(Object.new) }.should raise_error(ArgumentError)
+    end
+
     it 'should not create duplicate subscriptions' do
       subscriber.subscribe_to subscribable
       subscriber.subscribe_to subscribable
@@ -45,6 +49,10 @@ describe 'subscriber' do
       subscriber.subscriptions.inspect
 
       subscriber.subscriptions.count.should eq 0
+    end
+
+    it 'should throw exception if not given a subscribeble' do
+      -> { subscriber.unsubscribe_from(Object.new) }.should raise_error(ArgumentError)
     end
   end
 
