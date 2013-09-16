@@ -4,10 +4,10 @@ module Notifi
 
     has_many :notifications, dependent: :destroy, inverse_of: :subscription
 
-    def notify(message = '')
-      self.notifications.create(subscriber: self.subscriber,
-                               subscribable: self.subscribable,
-                               message: message)
+    def notify
+      self.subscribable.notification_class.create(subscription: self,
+                                                  subscriber: self.subscriber,
+                                                  subscribable: self.subscribable)
     end
   end
 end

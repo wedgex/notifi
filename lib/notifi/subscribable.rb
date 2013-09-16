@@ -4,9 +4,9 @@ module Notifi
       base.extend ClassMethods
     end
 
-    def notify(message='')
+    def notify
       subscriptions.each do |s|
-        s.notify(message)
+        s.notify
       end
     end
 

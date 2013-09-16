@@ -16,12 +16,16 @@ module Notifi
       include Subscriber
     end
 
-    def acts_as_subscribable
+    def acts_as_subscribable(notification_class: Notification)
       Subscription.belongs_to :subscribable, polymorphic: true
       has_many :subscriptions, as: :subscribable, class_name: Subscription.to_s, dependent: :destroy
 
       Notification.belongs_to :subscribable, polymorphic: true
-      has_many :notifications, as: :subscribable, class_name: Notification.to_s, dependent: :destroy
+      has_many :notifications, as: :subscribable, class_name: notification_class.to_s, dependent: :destroy
+
+      class_attribute :notification_class
+
+      self.notification_class = notification_class
 
       include Subscribable
     end
