@@ -1,6 +1,13 @@
 module Notifi
   module Subscriber
     def self.included(base)
+      base.has_many :subscriptions, class_name: Subscription.to_s, dependent: :destroy, inverse_of: :subscriber
+      base.has_many :notifications, class_name: Notification.to_s, dependent: :destroy, inverse_of: :subscriber do
+        def mark_as_read
+          self.each(&:mark_as_read)
+        end
+      end
+
       base.extend ClassMethods
     end
 
@@ -22,7 +29,7 @@ module Notifi
       end
     end
 
-    private 
+    private
     def reject_non_subscribable!(target)
       unless target.kind_of? Subscribable
         raise ArgumentError, "#{target.class} does not include Notifi::Subscribable"

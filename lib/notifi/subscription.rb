@@ -2,6 +2,8 @@ module Notifi
   class Subscription
     include Mongoid::Document
 
+    belongs_to :subscriber, polymorphic: true
+    belongs_to :subscribable, polymorphic: true
     has_many :notifications, dependent: :destroy, inverse_of: :subscription
 
     def notify(options={})
