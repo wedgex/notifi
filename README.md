@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/wedgex/notifi.png)](https://codeclimate.com/github/wedgex/notifi)
+
 # Notifi
 
 TODO: Write a gem description
