@@ -6,9 +6,9 @@ module Notifi
       include Subscriber
     end
 
-    def acts_as_subscribable(notification_class: Notification)
-      class_attribute :notification_class
-      self.notification_class = notification_class
+    def acts_as_subscribable(subscribable_options={})
+      class_attribute :subscribable_options
+      self.subscribable_options = subscribable_options
 
       include Subscribable
     end

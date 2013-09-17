@@ -35,9 +35,51 @@ describe 'subscribable' do
 
       message = 'HELLO'
 
-      comment.notify(comment: message)
+      comment.notify(set: {comment: message})
 
       user.notifications.first.comment.should eq message
+    end
+
+    it 'should be able to define notifications for different events' do
+      user = User.create
+      class Thing
+        include Mongoid::Document
+        include Notifi
+
+        acts_as_subscribable default: Notifi::Notification, test: CommentNotification
+      end
+      thing = Thing.create
+      user.subscribe_to thing
+      thing.notify :test
+      user.notifications.first.should be_a CommentNotification
+    end
+
+    it 'should fall back to default notification type if event not provided' do
+      user = User.create
+      class Thing
+        include Mongoid::Document
+        include Notifi
+
+        acts_as_subscribable default: CommentNotification
+      end
+      thing = Thing.create
+      user.subscribe_to thing
+      thing.notify
+      user.notifications.first.should be_a CommentNotification
+    end
+
+    it 'should fall back to default notification type if event not found' do
+      user = User.create
+      class Thing
+        include Mongoid::Document
+        include Notifi
+
+        acts_as_subscribable default: CommentNotification
+      end
+      thing = Thing.create
+      user.subscribe_to thing
+      thing.notify :test
+      user.notifications.first.should be_a CommentNotification
     end
   end
 end

@@ -26,7 +26,7 @@ class Comment
   include Mongoid::Document
   include Notifi
 
-  acts_as_subscribable notification_class: CommentNotification
+  acts_as_subscribable default: CommentNotification
 end
 
 RSpec.configure do |config|

@@ -90,14 +90,27 @@ class Post
   include Mongoid::Document
   include Notifi
 
-  acts_as_subscribable notification_class: CommentNotification
+  acts_as_subscribable default: CommentNotification
 end
 
 post = Post.create
 user.subscribe_to post
-post.notify(message: 'Someone commented on your post!')
+post.notify(set:{message: 'Someone commented on your post!'})
 
 user.notifications.first.message # => 'Someone commented on your post!'
+~~~
+
+### Notifying specific events
+
+~~~ Ruby
+
+  # ...
+
+  acts_as_subscribable default: CommentNotification, test: TestNotification
+
+  # ...
+
+  thing.notifiy(:test)
 ~~~
 
 ## Contributing
