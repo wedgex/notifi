@@ -20,6 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
+### Basic subscription & notification
 Setup subscribers and subscribable models:
 ~~~~~ Ruby
 class User
@@ -57,7 +58,45 @@ post.notify
 user.notifications.count # => 1
 ~~~~
 
+### On notification events
 
+~~~ Ruby
+class User
+  include Mongoid::Document
+  include Notifi
+
+  acts_as_subscriber
+
+  on_notification do |notification|
+    # Do some sweet notification stuff here. Like maybe queue up an email
+    # or print a smiley face to the log.
+  end
+end
+~~~
+
+The block provided to on_notification in your subscriber class will be called after a notification for the subscriber is created.
+
+
+### Custom notification classes.
+
+You can customize notifications by extending the Notification class and configuring the subscribable to use the custom class for notifications.
+
+~~~ Ruby
+class CommentNotification < Notifi::Notification
+  field :message, type: String
+end
+
+class Comment
+  include Mongoid::Document
+  include Notifi
+
+  acts_as_subscribable notification_class: CommentNotification
+
+  after_create do
+    self.notify
+  end
+end
+~~~
 
 ## Contributing
 
