@@ -4,10 +4,12 @@ module Notifi
 
     has_many :notifications, dependent: :destroy, inverse_of: :subscription
 
-    def notify
-      self.subscribable.notification_class.create(subscription: self,
-                                                  subscriber: self.subscriber,
-                                                  subscribable: self.subscribable)
+    def notify(options={})
+      options[:subscription] = self
+      options[:subscriber] = self.subscriber
+      options[:subscribable] = self.subscribable
+
+      self.subscribable.notification_class.create(options)
     end
   end
 end

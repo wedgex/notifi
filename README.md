@@ -86,16 +86,18 @@ class CommentNotification < Notifi::Notification
   field :message, type: String
 end
 
-class Comment
+class Post
   include Mongoid::Document
   include Notifi
 
   acts_as_subscribable notification_class: CommentNotification
-
-  after_create do
-    self.notify
-  end
 end
+
+post = Post.create
+user.subscribe_to post
+post.notify(message: 'Someone commented on your post!')
+
+user.notifications.first.message # => 'Someone commented on your post!'
 ~~~
 
 ## Contributing

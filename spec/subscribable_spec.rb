@@ -15,21 +15,29 @@ describe 'subscribable' do
     end
   end
 
-  it 'should be able to define notification type' do
-    class TestNotification < Notifi::Notification; end
-    class Thing
-      include Mongoid::Document
-      include Notifi
-      acts_as_subscribable notification_class: TestNotification
+  context 'custom notifications' do
+    it 'should be able to define notification type' do
+      user = User.create
+      comment = Comment.create
+
+      user.subscribe_to comment
+
+      comment.notify
+
+      user.notifications.first.should be_a CommentNotification
     end
 
-    user = User.create
-    thing = Thing.create
+    it 'should be able to set fields on notification' do
+      user = User.create
+      comment = Comment.create
 
-    user.subscribe_to thing
+      user.subscribe_to comment
 
-    thing.notify
+      message = 'HELLO'
 
-    user.notifications.first.should be_a TestNotification
+      comment.notify(comment: message)
+
+      user.notifications.first.comment.should eq message
+    end
   end
 end

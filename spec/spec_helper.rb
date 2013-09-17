@@ -18,6 +18,17 @@ class Post
   acts_as_subscribable
 end
 
+class CommentNotification < Notifi::Notification
+  field :comment, type: String
+end
+
+class Comment
+  include Mongoid::Document
+  include Notifi
+
+  acts_as_subscribable notification_class: CommentNotification
+end
+
 RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
