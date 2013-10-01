@@ -1,8 +1,9 @@
 module Notifi
   module Subscriber
     def self.included(base)
-      base.has_many :subscriptions, class_name: Subscription.to_s, dependent: :destroy, inverse_of: :subscriber
-      base.has_many :notifications, class_name: Notification.to_s, dependent: :destroy, inverse_of: :subscriber do
+      base.has_many :subscriptions, class_name: Subscription.name, dependent: :destroy, inverse_of: :subscriber
+      base.has_many :triggered_notifications, class_name: Notification.name, dependent: :destroy, inverse_of: :notifier
+      base.has_many :notifications, class_name: Notification.name, dependent: :destroy, inverse_of: :subscriber do
         def mark_as_read
           self.each(&:mark_as_read)
         end

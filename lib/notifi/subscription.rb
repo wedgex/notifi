@@ -6,8 +6,9 @@ module Notifi
     belongs_to :subscribable, polymorphic: true
     has_many :notifications, dependent: :destroy, inverse_of: :subscription
 
-    def notify(event=:default, set: {})
+    def notify(event=:default, notifier=nil, set: {})
       set[:subscription] = self
+      set[:notifier] = notifier
       set[:subscriber] = self.subscriber
       set[:subscribable] = self.subscribable
 

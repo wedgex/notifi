@@ -15,6 +15,17 @@ describe 'subscribable' do
     end
   end
 
+  it 'should be able to provide a notifier' do
+    user = User.create
+    comment = Comment.create
+
+    user.subscribe_to comment
+
+    comment.notify(notifier: user)
+
+    user.notifications.first.notifier.should eq user
+  end
+
   context 'custom notifications' do
     it 'should be able to define notification type' do
       user = User.create

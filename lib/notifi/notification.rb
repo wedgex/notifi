@@ -4,6 +4,7 @@ module Notifi
 
     belongs_to :subscription
     belongs_to :subscriber, polymorphic: true
+    belongs_to :notifier, polymorphic: true
     belongs_to :subscribable, polymorphic: true
 
     field :read, type: Boolean, default: false

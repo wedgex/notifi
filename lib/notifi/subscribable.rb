@@ -12,8 +12,8 @@ module Notifi
                                     inverse_of: :subscribable
     end
 
-    def notify(event=:default, set: {})
-      self.subscriptions.each { |s| s.notify(event, set: set) }
+    def notify(event=:default, notifier: nil, set: {})
+      self.subscriptions.each { |s| s.notify(event, notifier, set: set) }
     end
   end
 end
