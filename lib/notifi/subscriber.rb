@@ -15,7 +15,7 @@ module Notifi
     def subscribe_to(subscribable)
       reject_non_subscribable! subscribable
 
-      self.subscriptions.find_or_create_by(subscribable: subscribable)
+      self.subscriptions.find_or_create_by(subscriber: self, subscribable: subscribable)
     end
 
     def unsubscribe_from(subscribable)
