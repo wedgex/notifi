@@ -1,6 +1,7 @@
 module Notifi
   class Notification
     include Mongoid::Document
+    include Mongoid::Timestamps
 
     belongs_to :subscription
     belongs_to :subscriber, polymorphic: true
