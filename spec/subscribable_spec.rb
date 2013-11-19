@@ -93,4 +93,23 @@ describe 'subscribable' do
       user.notifications.first.should be_a CommentNotification
     end
   end
+
+  it 'should be able to provide a namespaced notification' do
+    module Notification
+      class Comment < Notifi::Notification; end
+    end
+
+    class Thing
+      include Mongoid::Document
+      include Notifi
+
+      acts_as_subscribable default: Notification::Comment
+    end
+
+    user = User.create
+    thing = Thing.create
+    user.subscribe_to thing
+    thing.notify
+    user.notifications.first.should be_a Notification::Comment
+  end
 end
