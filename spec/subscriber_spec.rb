@@ -93,4 +93,21 @@ describe 'subscriber' do
       subscriber.notifications.each { |n| n.read?.should be true }
     end
   end
+
+  context 'mark_all_read_for' do
+    it 'should set read to true on all of the users notifications for the given subscribable' do
+      subscription1 = subscriber.subscribe_to subscribable
+      subscription2 = subscriber.subscribe_to Post.create
+
+      subscription1.notify
+      subscription2.notify
+
+      subscriber.mark_all_read_for(subscribable)
+
+      subscriber.notifications.each do |n|
+        # :(
+        n.read?.should be (n.subscribable_id == subscribable._id)
+      end
+    end
+  end
 end

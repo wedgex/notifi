@@ -24,6 +24,12 @@ module Notifi
       self.subscriptions.destroy_all(subscribable: subscribable)
     end
 
+    def mark_all_read_for(subscribable)
+      reject_non_subscribable! subscribable
+
+      self.notifications.where(subscribable: subscribable).set(:read, true)
+    end
+
     module ClassMethods
       def on_notification(&block)
         self.notification_event = block
