@@ -8,12 +8,17 @@ module Notifi
     has_many :notifications, dependent: :destroy, inverse_of: :subscription
 
     def notify(event=:default, notifier=nil, set: {})
-      set[:subscription] = self
-      set[:notifier] = notifier
-      set[:subscriber] = self.subscriber
-      set[:subscribable] = self.subscribable
+      # TODO I wanted to do this in the subscribable notify method so you could
+      # still forceably notifiy the notifier, but for the life of me I couldn't
+      # get it to work.
+      if notifier != self.subscriber
+        set[:subscription] = self
+        set[:notifier] = notifier
+        set[:subscriber] = self.subscriber
+        set[:subscribable] = self.subscribable
 
-      self.notification_class(event).create(set)
+        self.notification_class(event).create(set)
+      end
     end
 
     def subscribable_options

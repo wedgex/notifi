@@ -17,13 +17,22 @@ describe 'subscribable' do
 
   it 'should be able to provide a notifier' do
     user = User.create
-    comment = Comment.create
+    notifier = User.create
 
-    user.subscribe_to comment
+    user.subscribe_to subscribable
 
-    comment.notify(notifier: user)
+    subscribable.notify(notifier: notifier)
 
-    user.notifications.first.notifier.should eq user
+    user.notifications.first.notifier.should eq notifier
+  end
+
+  it 'should not notify the notifier' do
+    notifier = User.create
+    notifier.subscribe_to subscribable
+
+    subscribable.notify(notifier: notifier)
+
+    notifier.notifications.empty?.should be true
   end
 
   context 'custom notifications' do
