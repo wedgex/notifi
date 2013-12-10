@@ -13,7 +13,7 @@ module Notifi
     end
 
     def notify(event=:default, notifier: nil, set: {})
-      self.subscriptions.each { |s| s.notify(event, notifier, set: set) }
+      self.subscriptions.each { |s| s.notify(event, notifier: notifier, set: set) }
     end
   end
 end

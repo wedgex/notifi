@@ -7,7 +7,7 @@ module Notifi
     belongs_to :subscribable, polymorphic: true
     has_many :notifications, dependent: :destroy, inverse_of: :subscription
 
-    def notify(event=:default, notifier=nil, set: {})
+    def notify(event=:default, notifier: nil, set: {})
       # TODO I wanted to do this in the subscribable notify method so you could
       # still forceably notifiy the notifier, but for the life of me I couldn't
       # get it to work.
