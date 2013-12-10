@@ -31,10 +31,17 @@ describe 'subscriber' do
       subscriber.subscriptions.count.should eq 1
     end
 
-    it 'should return a Subscription' do
+    it 'should return a Subscription if subscription create' do
       subscription = subscriber.subscribe_to subscribable
 
       subscription.should be_an_instance_of Notifi::Subscription
+    end
+
+    it 'should not return a Subscription if subscription already exists' do
+      subscriber.subscribe_to subscribable
+      subscription = subscriber.subscribe_to subscribable
+
+      subscription.should be nil
     end
   end
 
