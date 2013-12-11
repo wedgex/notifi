@@ -3,10 +3,10 @@ module Notifi
     include Mongoid::Document
     include Mongoid::Timestamps
 
-    belongs_to :subscription
-    belongs_to :subscriber, polymorphic: true
-    belongs_to :notifier, polymorphic: true
-    belongs_to :subscribable, polymorphic: true
+    belongs_to :subscription, index: true
+    belongs_to :subscriber, polymorphic: true, index: true
+    belongs_to :notifier, polymorphic: true, index: true
+    belongs_to :subscribable, polymorphic: true, index: true
 
     field :read, type: Boolean, default: false
     field :message, type: String

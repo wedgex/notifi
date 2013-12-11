@@ -3,8 +3,8 @@ module Notifi
     include Mongoid::Document
     include Mongoid::Timestamps
 
-    belongs_to :subscriber, polymorphic: true
-    belongs_to :subscribable, polymorphic: true
+    belongs_to :subscriber, polymorphic: true, index: true
+    belongs_to :subscribable, polymorphic: true, index: true
     has_many :notifications, dependent: :destroy, inverse_of: :subscription
 
     def notify(event=:default, notifier: nil, set: {})
