@@ -87,34 +87,4 @@ describe 'subscriber' do
       thing.class.instance_variable_get(:@block_called).should be true
     end
   end
-
-  context 'mark_as_read' do
-    it 'should set read to true on all notifications' do
-      subscription = subscriber.subscribe_to subscribable
-
-      subscription.notify
-      subscription.notify
-
-      subscriber.notifications.mark_as_read
-
-      subscriber.notifications.each { |n| n.read?.should be true }
-    end
-  end
-
-  context 'mark_all_read_for' do
-    it 'should set read to true on all of the users notifications for the given subscribable' do
-      subscription1 = subscriber.subscribe_to subscribable
-      subscription2 = subscriber.subscribe_to Post.create
-
-      subscription1.notify
-      subscription2.notify
-
-      subscriber.mark_all_read_for(subscribable)
-
-      subscriber.notifications.each do |n|
-        # :(
-        n.read?.should be (n.subscribable_id == subscribable._id)
-      end
-    end
-  end
 end

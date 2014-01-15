@@ -8,7 +8,6 @@ module Notifi
     belongs_to :notifier, polymorphic: true, index: true
     belongs_to :subscribable, polymorphic: true, index: true
 
-    field :read, type: Boolean, default: false
     field :message, type: String
 
     after_create do |n|
@@ -21,10 +20,6 @@ module Notifi
 
     def fire_notification_event
       self.subscriber.notification_event.call(self) if self.notification_event?
-    end
-
-    def mark_as_read
-      self.update_attribute :read, true
     end
   end
 end
